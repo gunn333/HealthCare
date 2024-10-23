@@ -20,16 +20,42 @@ const app = express();
 // either file is frontend or backend pass all configurations through env file only.
 const port = process.env.PORT || 5000;
 
+const path = require('path');
+const hbs = require('hbs');
+
+// Set the views directory
+app.set('views', path.join(__dirname, 'views'));
+
+// Register the partials directory for hbs
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
+
 app.use(express.json());
 app.use(cors());
+app.use(errorHandler);
 
 app.get('/', (req, res) => {
 	res.send('working');
 });
 
-app.use(errorHandler);
+// This is a route for the home page
+// app.get('/home', (req, res) => {
+// 	// let user = User.findOne({id:})
+// 	res.render('home', {});
+// });
+
+// This is a route for the alluser page
+app.get('/allusers', (req, res) => {
+	res.render('users', {
+		users: [
+			{ id: 1, username: 'Gunn', age: 20 },
+			{ id: 1, username: 'Shasha', age: 23 }
+		]
+	});
+});
 
 // app.listen() is used to bind and listen the connections on the specified host and port
 app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+	console.log(`Server is running on port http://localhost:${port}`);
 });
+
+app.set('view engine', 'hbs');
