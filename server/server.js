@@ -53,9 +53,24 @@ app.get('/allusers', (req, res) => {
 	});
 });
 
+app.use('/api/', require('./Routes/userRoutes'));
+
 // app.listen() is used to bind and listen the connections on the specified host and port
 app.listen(port, () => {
 	console.log(`Server is running on port http://localhost:${port}`);
 });
 
 app.set('view engine', 'hbs');
+
+// Which routes need to be secure and which routes need to be not secure and why
+// The routes that need to be secure are the routes that are used to access the sensitive data of the user
+// For example, the routes that are used to access the user's personal information, the routes that are used to access the user's financial information, etc.
+// These routes need to be secure because if these routes are not secure, then the sensitive data of the user can be accessed by unauthorized users
+// The routes that need to be not secure are the routes that are used to access the public data of the user
+// For example, the routes that are used to access the user's public profile, the routes that are used to access the user's public posts, etc.
+
+// What is the difference between HTTP and HTTPS
+
+// HTTP stands for Hypertext Transfer Protocol
+// HTTPS stands for Hypertext Transfer Protocol Secure
+// HTTP is used to transfer data between the client and the server while HTTPS is used to transfer data between the client and the server securely
