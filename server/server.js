@@ -21,13 +21,11 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const path = require('path');
-const hbs = require('hbs');
-
-// Set the views directory
-app.set('views', path.join(__dirname, 'views'));
+var hbs = require('hbs');
 
 // Register the partials directory for hbs
-hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
+hbs.registerPartials(__dirname + '/views/partials', function (err) {});
+app.set('view engine', 'hbs');
 
 app.use(express.json());
 app.use(cors());
@@ -38,10 +36,13 @@ app.get('/', (req, res) => {
 });
 
 // This is a route for the home page
-// app.get('/home', (req, res) => {
-// 	// let user = User.findOne({id:})
-// 	res.render('home', {});
-// });
+app.get('/home', (req, res) => {
+		// let user = User.findOne({id:})
+	res.render('home', {
+		username: "Gunn",
+		posts: "blah blah blah"
+	});
+});
 
 // This is a route for the alluser page
 app.get('/allusers', (req, res) => {
@@ -54,13 +55,12 @@ app.get('/allusers', (req, res) => {
 });
 
 app.use('/api/', require('./Routes/userRoutes'));
+app.use('/api/details', require('./Routes/doctorDetails'));
 
 // app.listen() is used to bind and listen the connections on the specified host and port
 app.listen(port, () => {
 	console.log(`Server is running on port http://localhost:${port}`);
 });
-
-app.set('view engine', 'hbs');
 
 // Which routes need to be secure and which routes need to be not secure and why
 // The routes that need to be secure are the routes that are used to access the sensitive data of the user
