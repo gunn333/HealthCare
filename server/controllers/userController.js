@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const User = require('../Models/userModel');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -76,6 +77,11 @@ const loginUser = asyncHandler(async (req, res) => {
 	}
 
 	// Successful login response
+	//res.status(200).json({ message: "Login successful", user: { email: user.email, first_name: user.first_name, last_name: user.last_name } });
+	// Generate JWT token (optional for authentication)
+	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+		expiresIn: '1d'
+	});
 	res.status(200).json({
 		message: 'Login successful',
 		user: {
