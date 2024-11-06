@@ -1,29 +1,29 @@
-// // Express
+// Express
 // const express = require('express');
-// // Error handler is basically a middleware that catches errors that are thrown in the application
+// Error handler is basically a middleware that catches errors that are thrown in the application
 // const errorHandler = require('./Middleware/errorHandler');
 // const connectDb = require('./Config/dbconnection');
-// // CORS - Cross Origin Resource Sharing
-// // It is a security feature implemented in browsers that restricts web pages from making requests to a different domain than the one that served the web page
+// CORS - Cross Origin Resource Sharing
+// It is a security feature implemented in browsers that restricts web pages from making requests to a different domain than the one that served the web page
 // const cors = require('cors'); // cors for security at server side
 
-// // we install dotenv locally because we don't want to expose our credentials to the public
+// we install dotenv locally because we don't want to expose our credentials to the public
 // const dotenv = require('dotenv');
-// // dotenv.config() is used to read the .env file and parse the contents
+// dotenv.config() is used to read the .env file and parse the contents
 // dotenv.config();
 
 // connectDb(); // db connection setup for crud operations
 // const app = express();
 
-// // process.env.PORT is used to get the port number from the environment variable PORT
-// // If the environment variable PORT is not set, then the port number is set to 5000
-// // either file is frontend or backend pass all configurations through env file only.
+// process.env.PORT is used to get the port number from the environment variable PORT
+// If the environment variable PORT is not set, then the port number is set to 5000
+// either file is frontend or backend pass all configurations through env file only.
 // const port = process.env.PORT || 5000;
 
 // const path = require('path');
 // var hbs = require('hbs');
 
-// // Register the partials directory for hbs
+// Register the partials directory for hbs
 // hbs.registerPartials(__dirname + '/views/partials', function (err) {});
 // app.set('view engine', 'hbs');
 
@@ -35,16 +35,16 @@
 // 	res.send('working');
 // });
 
-// // This is a route for the home page
+// This is a route for the home page
 // app.get('/home', (req, res) => {
-// 		// let user = User.findOne({id:})
+// let user = User.findOne({id:})
 // 	res.render('home', {
 // 		username: "Gunn",
 // 		posts: "blah blah blah"
 // 	});
 // });
 
-// // This is a route for the alluser page
+// This is a route for the alluser page
 // app.get('/allusers', (req, res) => {
 // 	res.render('users', {
 // 		users: [
@@ -57,35 +57,37 @@
 // app.use('/api/', require('./Routes/userRoutes'));
 // app.use('/api/details', require('./Routes/doctorDetails'));
 
-// // app.listen() is used to bind and listen the connections on the specified host and port
+// app.listen() is used to bind and listen the connections on the specified host and port
 // app.listen(port, () => {
 // 	console.log(`Server is running on port http://localhost:${port}`);
 // });
 
-// // Which routes need to be secure and which routes need to be not secure and why
-// // The routes that need to be secure are the routes that are used to access the sensitive data of the user
-// // For example, the routes that are used to access the user's personal information, the routes that are used to access the user's financial information, etc.
-// // These routes need to be secure because if these routes are not secure, then the sensitive data of the user can be accessed by unauthorized users
-// // The routes that need to be not secure are the routes that are used to access the public data of the user
-// // For example, the routes that are used to access the user's public profile, the routes that are used to access the user's public posts, etc.
+// Which routes need to be secure and which routes need to be not secure and why
+// The routes that need to be secure are the routes that are used to access the sensitive data of the user
+// For example, the routes that are used to access the user's personal information, the routes that are used to access the user's financial information, etc.
+// These routes need to be secure because if these routes are not secure, then the sensitive data of the user can be accessed by unauthorized users
+// The routes that need to be not secure are the routes that are used to access the public data of the user
+// For example, the routes that are used to access the user's public profile, the routes that are used to access the user's public posts, etc.
 
-// // What is the difference between HTTP and HTTPS
+// What is the difference between HTTP and HTTPS
 
-// // HTTP stands for Hypertext Transfer Protocol
-// // HTTPS stands for Hypertext Transfer Protocol Secure
-// // HTTP is used to transfer data between the client and the server while HTTPS is used to transfer data between the client and the server securely
+// HTTP stands for Hypertext Transfer Protocol
+// HTTPS stands for Hypertext Transfer Protocol Secure
+// HTTP is used to transfer data between the client and the server while HTTPS is used to transfer data between the client and the server securely
 
-// Import required packages
 const express = require('express');
 const mongoose = require('mongoose');
 const errorHandler = require('./Middleware/errorHandler');
 const connectDb = require('./Config/dbconnection');
-const cors = require('cors'); // CORS for security at the server side
+const cors = require('cors'); // CORS for security at server side
 const multer = require('multer');
 const File = require('./Models/file');
 const dotenv = require('dotenv');
+// path is basically a module that provides utilities for working with file and directory paths
 const path = require('path');
 const hbs = require('hbs');
+// node.js module used for iteracting with the file system
+const fs = require('fs');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -98,35 +100,60 @@ const app = express();
 const port = process.env.PORT || 5000; // Set server port
 
 // Set view engine and views path
-hbs.registerPartials(__dirname + '/views/partials', err => {
+// Partials are reusable templates that can be included in other templates
+// Register the partials directory for hbs
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'), err => {
 	if (err) console.error('Error registering hbs partials:', err);
 });
+// Set the view engine to handlebars
+// When you use res.render() to render a view in a route, Express will look for .hbs files in the views folder by default.
 app.set('view engine', 'hbs');
+// Sets the directory where your view templates are stored
 app.set('views', path.join(__dirname, 'views'));
 
 // Middleware setup
+// Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle.
+// app.use() is used to bind application-level middleware to an instance of the app object
+// app.use(express.json()); means that the app will use the json parser middleware which basically parses the incoming request with JSON payloads
 app.use(express.json());
+// Middleware for parsing URL-encoded data (like form submissions). Extended : true in simple terms means that the data can be of any type.
 app.use(express.urlencoded({ extended: true }));
+// Middleware for handling CORS (Cross-Origin Resource Sharing) requests
+// CORS is a security feature implemented in browsers that restricts web pages from making requests to a different domain than the one that served the web page
 app.use(cors());
 
-// Ensure 'uploads' directory exists, or create it
-const fs = require('fs');
-const uploadDir = './uploads';
+// Ensure 'uploads' directory exists or create it
+const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
 	fs.mkdirSync(uploadDir);
 	console.log("Created 'uploads' directory.");
 }
 
-// Multer storage configuration
+//* File Upload
+
+// Multer is a node.js middleware for handling multipart/form-data which is primarily used for uploading files.
+// multipart/form-data means that the form data is encoded as a multipart MIME message
+// Multer provides a storage engine to store uploaded files
 const storage = multer.diskStorage({
+	// destination -> Specifies where the uploaded files should be stored (uploadDir).
 	destination: function (req, file, cb) {
-		cb(null, './uploads'); // Directory where files will be stored
+		cb(null, uploadDir);
 	},
+	// filename -> Specifies the name of the uploaded files
+	// It creates a unique filename for each uploaded file by appending the current timestamp and a random number to the original filename
 	filename: function (req, file, cb) {
+		// uniqueSuffix is a unique string that is generated by concatenating the current timestamp and a random number
 		const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-		cb(null, file.fieldname + '-' + uniqueSuffix);
+		// cb is a callback function that is called after the filename is generated
+		cb(
+			null,
+			`${file.fieldname}-${uniqueSuffix}${path.extname(
+				file.originalname
+			)}`
+		);
 	}
 });
+// The app will use the storage engine to store the uploaded files
 const upload = multer({ storage: storage });
 
 // Route to render the home page with uploaded files data
@@ -157,12 +184,13 @@ app.post('/profile', upload.single('avatar'), async (req, res) => {
 	}
 
 	try {
-		// Create a new file record in MongoDB
+		// Create a new file record in MongoDB with file metadata
 		const fileData = new File({
 			originalName: req.file.originalname,
 			filename: req.file.filename,
 			path: req.file.path,
-			size: req.file.size
+			size: req.file.size,
+			contentType: req.file.mimetype // Store MIME type to handle different file types
 		});
 
 		await fileData.save(); // Save metadata to MongoDB
@@ -172,6 +200,18 @@ app.post('/profile', upload.single('avatar'), async (req, res) => {
 		console.error('Error uploading file:', error);
 		res.status(500).send('Error uploading file.');
 	}
+});
+
+// Route to serve uploaded files directly
+app.get('/uploads/:filename', (req, res) => {
+	const filePath = path.join(uploadDir, req.params.filename);
+	fs.stat(filePath, (err, stat) => {
+		if (err) {
+			console.error('File not found:', err);
+			return res.status(404).send('File not found.');
+		}
+		res.sendFile(filePath); // Serve the file for download or preview
+	});
 });
 
 // Import and use additional routes
