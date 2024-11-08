@@ -1,4 +1,6 @@
 const express = require('express');
+
+const { jwtAuthMiddleware } = require('../Middleware/jwtMiddleware');
 const router = express.Router();
 const {
 	docDetails,
@@ -6,7 +8,7 @@ const {
 } = require('../controllers/doctorDetailsController');
 
 //route for registration
-router.post('/details', docDetails);
+router.post('/details', jwtAuthMiddleware, docDetails);
 
 // GET route for retrieving doctor details
 router.get('/details', getDoctors); // New GET route

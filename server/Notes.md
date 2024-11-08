@@ -55,3 +55,7 @@
 -   HTTP stands for Hypertext Transfer Protocol
 -   HTTPS stands for Hypertext Transfer Protocol Secure
 -   HTTP is used to transfer data between the client and the server while HTTPS is used to transfer data between the client and the server securely
+
+## MiddleWare
+
+-   Middleware are basically functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. The next middleware function is commonly denoted by a variable named next.

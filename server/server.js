@@ -109,6 +109,10 @@ app.use(express.urlencoded({ extended: true }));
 // CORS is a security feature implemented in browsers that restricts web pages from making requests to a different domain than the one that served the web page
 app.use(cors());
 
+app.get('/', (req, res) => {
+	res.send('working');
+});
+
 // Ensure 'uploads' directory exists or create it
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
