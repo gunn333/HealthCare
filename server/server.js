@@ -208,6 +208,8 @@ app.get('/uploads/:filename', (req, res) => {
 // Import and use additional routes
 app.use('/api/', require('./Routes/userRoutes'));
 app.use('/api/details', require('./Routes/doctorDetails'));
+app.use('/api/accdetails', require('./Routes/myAccount'));
+app.use('/api/newsletter', require('./Routes/newsletterRoutes'));
 
 // Error handling middleware
 app.use(errorHandler);
